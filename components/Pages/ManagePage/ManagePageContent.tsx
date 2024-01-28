@@ -6,11 +6,11 @@ import useCollection from "@/hooks/useCollection"
 import getIpfsLink from "@/lib/getIpfsLink"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import PhotoGrid from "./PhotoGrid"
 import getCallSaleData from "@/lib/getCallSaleData"
-import { useAccount, useNetwork } from "wagmi"
+import { useAccount } from "wagmi"
 import { BigNumber } from "ethers"
 import useErc20FixedPriceSaleStrategy from "@/hooks/useErc20FixedPriceSaleStrategy"
+import PhotoGrid from "./PhotoGrid"
 
 const ManagePageContent = () => {
   const { query } = useRouter()
