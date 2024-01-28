@@ -24,8 +24,8 @@ const { chains, publicClient } = configureChains(
 )
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
+  appName: "onchain-magic",
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID,
   chains,
 })
 
