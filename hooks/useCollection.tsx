@@ -38,7 +38,7 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     () => collectionAddress && new Contract(collectionAddress, abi, signer),
     [collectionAddress, signer],
   )
-  const { isAdminOrRole } = usePermission(collectionContract)
+  const { addPermission, isAdminOrRole } = usePermission(collectionContract)
 
   const collectAll = async () => {
     if (chain?.id !== chainId) {
@@ -90,7 +90,7 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     init()
   }, [collectionAddress, chainId])
 
-  return { drops, collectAll, priceValues, collectWithRewards, isAdminOrRole }
+  return { addPermission, drops, collectAll, priceValues, collectWithRewards, isAdminOrRole }
 }
 
 export default useCollection

@@ -11,24 +11,28 @@ import PhotoGrid from "./PhotoGrid"
 const ManagePageContent = () => {
   const { query } = useRouter()
   const { collectionAddress, chainId } = query
-  const { drops, isAdminOrRole } = useCollection({
+  const { drops, isAdminOrRole, addPermission } = useCollection({
     collectionAddress: collectionAddress as string,
     chainId: parseInt(chainId as string, 10),
   })
   const [photos, setPhotos] = useState([])
   const [selectedPhoto, setSelectedPhoto] = useState(0)
   const [isAdmin, setIsAdmin] = useState(false)
+  const erc20Minter = "0xca1ecd1ff03528838598f13c9340e73307f9485e"
+
+  const handleClick = async () => {
+    addPermission(selectedPhoto, erc20Minter, 2)
+  }
 
   useEffect(() => {
     const init = async () => {
       try {
         const promises = drops.map((item) => fetch(item.uri).then((response) => response.json()))
         const results = await Promise.all(promises)
-        console.log("SWEETS RESULTS", results) // This will log the resolved values of each promise
         const imageUrls = results.map((item) => getIpfsLink(item.image))
-        console.log("SWEETS imageUrls", imageUrls) // This will log the resolved values of each promise
         setPhotos(imageUrls)
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error("Error fetching URIs:", error)
       }
     }
@@ -36,10 +40,11 @@ const ManagePageContent = () => {
   }, [drops])
 
   useEffect(() => {
-    if (!selectedPhoto) return
     const checkIsAdmin = async () => {
-      const erc20Minter = "0xca1ecd1ff03528838598f13c9340e73307f9485e"
+      console.log("SWEETS IS ADMIN?", selectedPhoto)
       const response = await isAdminOrRole(erc20Minter, selectedPhoto, 2)
+      console.log("SWEETS IS ADMIN?", response)
+
       setIsAdmin(response)
     }
     checkIsAdmin()
@@ -60,7 +65,9 @@ const ManagePageContent = () => {
             <Label htmlFor="price">Price in USDC</Label>
             <Input id="price" placeholder="Enter price" type="number" />
           </div>
-          <Button type="submit">List for Sale</Button>
+          <Button type="button" onClick={handleClick}>
+            List for Sale
+          </Button>
         </form>
       </div>
     </CardContent>

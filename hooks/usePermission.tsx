@@ -5,7 +5,14 @@ const usePermission = (collectionContract) => {
     return response
   }
 
-  return { isAdminOrRole }
+  const addPermission = async (tokenId, user, role) => {
+    if (!collectionContract) return false
+    const tx = await collectionContract.addPermission(tokenId, user, role)
+    const receipt = await tx.wait()
+    return receipt
+  }
+
+  return { addPermission, isAdminOrRole }
 }
 
 export default usePermission
