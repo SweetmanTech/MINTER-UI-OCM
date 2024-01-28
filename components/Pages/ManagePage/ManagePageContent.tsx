@@ -7,11 +7,16 @@ import getIpfsLink from "@/lib/getIpfsLink"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import PhotoGrid from "./PhotoGrid"
+import getCallSaleData from "@/lib/getCallSaleData"
+import { useAccount, useNetwork } from "wagmi"
+import { BigNumber } from "ethers"
+import useErc20FixedPriceSaleStrategy from "@/hooks/useErc20FixedPriceSaleStrategy"
 
 const ManagePageContent = () => {
   const { query } = useRouter()
   const { collectionAddress, chainId } = query
-  const { drops, isAdminOrRole, addPermission } = useCollection({
+  const { address } = useAccount()
+  const { drops, isAdminOrRole, addPermission, callSale } = useCollection({
     collectionAddress: collectionAddress as string,
     chainId: parseInt(chainId as string, 10),
   })
@@ -19,9 +24,32 @@ const ManagePageContent = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(0)
   const [isAdmin, setIsAdmin] = useState(false)
   const erc20Minter = "0xca1ecd1ff03528838598f13c9340e73307f9485e"
+  const usdcAddress = "0x98339D8C260052B7ad81c28c16C0b98420f2B46a" // GOERLI
+  const { priceValues } = useErc20FixedPriceSaleStrategy({
+    saleConfig: erc20Minter,
+    drops,
+    chainId: parseInt(chainId as string, 10),
+  })
+  const [usdcAmount, setUsdcAmount] = useState("0")
+  const usdcMultiplier = "1000000"
 
   const handleClick = async () => {
-    addPermission(selectedPhoto, erc20Minter, 2)
+    if (!isAdmin) {
+      addPermission(selectedPhoto + 1, erc20Minter, 2)
+      return
+    }
+    console.log("SWEETS CALLSALE", selectedPhoto)
+    const data = getCallSaleData({
+      tokenId: selectedPhoto + 1,
+      saleStart: 0,
+      saleEnd: BigInt("18446744073709551615"),
+      pricePerToken: BigNumber.from(usdcAmount).mul(BigNumber.from(usdcMultiplier)),
+      fundsRecipient: address,
+      erc20Address: usdcAddress,
+      maxTokensPerAddress: 0,
+    })
+    console.log("SWEETS data", data)
+    callSale(selectedPhoto + 1, erc20Minter, data)
   }
 
   useEffect(() => {
@@ -41,11 +69,16 @@ const ManagePageContent = () => {
 
   useEffect(() => {
     const checkIsAdmin = async () => {
-      console.log("SWEETS IS ADMIN?", selectedPhoto)
-      const response = await isAdminOrRole(erc20Minter, selectedPhoto, 2)
-      console.log("SWEETS IS ADMIN?", response)
-
+      const response = await isAdminOrRole(erc20Minter, selectedPhoto + 1, 2)
       setIsAdmin(response)
+
+      setUsdcAmount(
+        response
+          ? BigNumber.from(priceValues[selectedPhoto] || "0")
+              .div(BigNumber.from(usdcMultiplier))
+              .toString()
+          : "0",
+      )
     }
     checkIsAdmin()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,7 +96,13 @@ const ManagePageContent = () => {
         <form className="w-full space-y-4">
           <div className="space-y-2">
             <Label htmlFor="price">Price in USDC</Label>
-            <Input id="price" placeholder="Enter price" type="number" />
+            <Input
+              id="price"
+              placeholder="Enter price"
+              value={usdcAmount}
+              type="number"
+              onChange={(e) => setUsdcAmount(e.target.value)}
+            />
           </div>
           <Button type="button" onClick={handleClick}>
             List for Sale

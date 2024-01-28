@@ -14,6 +14,7 @@ import abi from "../lib/abi/Zora1155Drop.json"
 import useUniversalMinter from "./useUniversalMinter"
 import useZoraFixedPriceSaleStrategy from "./useZoraFixedPriceSaleStrategy"
 import usePermission from "./usePermission"
+import useCallSale from "./useCallSale"
 
 type UseCollectionParams = {
   collectionAddress: string
@@ -39,6 +40,7 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     [collectionAddress, signer],
   )
   const { addPermission, isAdminOrRole } = usePermission(collectionContract)
+  const { callSale } = useCallSale(collectionContract)
 
   const collectAll = async () => {
     if (chain?.id !== chainId) {
@@ -48,7 +50,7 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     const targets = Array(drops.length).fill(collectionAddress)
     const calldatas = getCalldatas(drops.length, minter, address as string, address as string)
     const totalValue = priceValues.reduce(
-      (total: any, value: any) => total.add(BigNumber.from(value)),
+      (total: any, value: any) => total.add(BigNumber.from(value || "0")),
       BigNumber.from(0),
     )
     const response = await mintBatchWithoutFees(targets, calldatas, priceValues, totalValue)
@@ -90,7 +92,15 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     init()
   }, [collectionAddress, chainId])
 
-  return { addPermission, drops, collectAll, priceValues, collectWithRewards, isAdminOrRole }
+  return {
+    addPermission,
+    callSale,
+    drops,
+    collectAll,
+    priceValues,
+    collectWithRewards,
+    isAdminOrRole,
+  }
 }
 
 export default useCollection
