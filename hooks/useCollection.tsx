@@ -13,6 +13,7 @@ import {
 import abi from "../lib/abi/Zora1155Drop.json"
 import useUniversalMinter from "./useUniversalMinter"
 import useZoraFixedPriceSaleStrategy from "./useZoraFixedPriceSaleStrategy"
+import usePermission from "./usePermission"
 
 type UseCollectionParams = {
   collectionAddress: string
@@ -37,6 +38,7 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     () => collectionAddress && new Contract(collectionAddress, abi, signer),
     [collectionAddress, signer],
   )
+  const { isAdminOrRole } = usePermission(collectionContract)
 
   const collectAll = async () => {
     if (chain?.id !== chainId) {
@@ -88,7 +90,7 @@ const useCollection = ({ collectionAddress, chainId, minterOverride }: UseCollec
     init()
   }, [collectionAddress, chainId])
 
-  return { drops, collectAll, priceValues, collectWithRewards }
+  return { drops, collectAll, priceValues, collectWithRewards, isAdminOrRole }
 }
 
 export default useCollection
