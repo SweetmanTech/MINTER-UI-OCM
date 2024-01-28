@@ -1,10 +1,12 @@
-import Button from "@/components/Button"
 import Input from "@/components/Input"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useEthersSigner } from "onchain-magic"
+import { useState } from "react"
+import SearchButton from "./SearchButton"
 
 export default function Component() {
   const signer = useEthersSigner()
+  const [collectionAddress, setCollectionAddress] = useState("")
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
@@ -29,10 +31,11 @@ export default function Component() {
               <form className="flex space-x-2">
                 <Input
                   className="max-w-lg flex-1"
+                  onChange={(e) => setCollectionAddress(e.target.value)}
                   placeholder="Enter collection address"
                   type="text"
                 />
-                <Button type="submit">Search</Button>
+                <SearchButton collectionAddress={collectionAddress} />
               </form>
             </div>
           ) : (
