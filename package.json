@@ -1,6 +1,6 @@
 {
-  "name": "buenosairessongcamp",
-  "private": true,
+  "name": "onchain-magic",
+  "private": false,
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev -p 3000",
