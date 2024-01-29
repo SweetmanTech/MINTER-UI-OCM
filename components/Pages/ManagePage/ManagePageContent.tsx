@@ -40,7 +40,6 @@ const ManagePageContent = () => {
       addPermission(selectedPhoto + 1, erc20Minter, 2)
       return
     }
-    console.log("SWEETS CALLSALE", selectedPhoto)
     const data = getCallSaleData({
       tokenId: selectedPhoto + 1,
       saleStart: 0,
@@ -50,7 +49,6 @@ const ManagePageContent = () => {
       erc20Address: usdcAddress,
       maxTokensPerAddress: 0,
     })
-    console.log("SWEETS data", data)
     callSale(selectedPhoto + 1, erc20Minter, data)
   }
 
