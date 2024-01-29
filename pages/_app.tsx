@@ -3,22 +3,34 @@ import "react-toastify/dist/ReactToastify.css"
 import "@rainbow-me/rainbowkit/styles.css"
 
 import { darkTheme, getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
-import { configureChains, createConfig, WagmiConfig } from "wagmi"
-import { mainnet, optimism, base, goerli, optimismGoerli, baseGoerli } from "wagmi/chains"
+import { configureChains, createConfig, sepolia, WagmiConfig } from "wagmi"
+import {
+  goerli,
+  optimismGoerli,
+  baseGoerli,
+  zoraTestnet,
+  zoraSepolia,
+  baseSepolia,
+  optimismSepolia,
+} from "wagmi/chains"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { publicProvider } from "wagmi/providers/public"
 import type { AppProps } from "next/app"
 import { ToastContainer } from "react-toastify"
 import { SessionProvider } from "next-auth/react"
 import React from "react"
-import { IS_TESTNET } from "@/lib/consts"
 import { ThemeProvider } from "../providers/ThemeProvider"
 
 const { chains, publicClient } = configureChains(
   [
-    IS_TESTNET ? goerli : mainnet,
-    IS_TESTNET ? optimismGoerli : optimism,
-    IS_TESTNET ? baseGoerli : base,
+    sepolia,
+    goerli,
+    baseGoerli,
+    baseSepolia,
+    zoraTestnet,
+    zoraSepolia,
+    optimismGoerli,
+    optimismSepolia,
   ],
   [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()],
 )
