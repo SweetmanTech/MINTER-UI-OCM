@@ -8593,10 +8593,10 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
-onchain-magic@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/onchain-magic/-/onchain-magic-0.5.3.tgz#b88ea3541dc0cb788abd2470796367c79cb07a84"
-  integrity sha512-hJ3W0bK7mSPat9Zdwd16OsfyVBAvUnA/A4rIgTJSn37KzvPoqeuh5mOUtOvAy/FpjuJbV9CavwmqogNlY9YO3Q==
+onchain-magic@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/onchain-magic/-/onchain-magic-0.5.5.tgz#0bb808cf8276b5d3e89713c37cd56d479dab49e9"
+  integrity sha512-8aB7e3BmV+8LpV1OHtxhPyIM5ADt+pP/qxIirEadxsSYsEQgpaJIynvYvhWt99GcZC5rX3z4pSnGvDwjY/A06Q==
   dependencies:
     "@zoralabs/protocol-deployments" "^0.0.12"
     "@zoralabs/universal-minter" "^0.2.14"
