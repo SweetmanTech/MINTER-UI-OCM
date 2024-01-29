@@ -2,8 +2,12 @@ import Button from "@/components/Button"
 import { CardContent } from "@/components/Card/Card"
 import Input from "@/components/Input"
 import Label from "@/components/Label"
-import { useCollection, useErc20FixedPriceSaleStrategy, getCallSaleData } from "onchain-magic"
-import getIpfsLink from "@/lib/getIpfsLink"
+import {
+  useCollection,
+  useErc20FixedPriceSaleStrategy,
+  getCallSaleData,
+  getIpfsLink,
+} from "onchain-magic"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useAccount } from "wagmi"
